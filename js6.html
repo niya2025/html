@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Online Exam</title>
+</head>
+<body>
+<center>
+<h1>Online Exam</h1>
+<h3 id="timer">Time Left: 05:00</h3>
+<div id="quiz"></div>
+<br>
+<button id="prevBtn" onclick="prevQuestion()">Previous</button>
+<button id="nextBtn" onclick="nextQuestion()">Next</button>
+<button id="submitBtn" onclick="submitExam()">Submit</button>
+<p id="result"></p>
+</center>
+
+<script>
+const questions = [
+{
+question: "Which planet is known as the Red Planet?",
+options: ["Earth", "Mars", "Venus", "Jupiter"],
+answer: "Mars"
+},
+{
+question: "What does CPU stand for?",
+options: ["Central Processing Unit", "Control Panel Utility", "Computer Power Unit", "Central Program Utility"],
+answer: "Central Processing Unit"
+},
+{
+question: "Who wrote the play 'Romeo and Juliet'?",
+options: ["William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain"],
+answer: "William Shakespeare"
+},
+{
+question: "What gas do plants absorb from the atmosphere?",
+options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+answer: "Carbon Dioxide"
+},
+{
+question: "Which country is known as the Land of the Rising Sun?",
+options: ["India", "Japan", "China", "Thailand"],
+answer: "Japan"
+},
+{
+question: "What is the chemical symbol for water?",
+options: ["WO", "H2O", "HO2", "O2H"],
+answer: "H2O"
+},
+{
+question: "How many continents are there on Earth?",
+options: ["5", "6", "7", "8"],
+answer: "7"
+},
+{
+question: "What is the largest organ in the human body?",
+options: ["Heart", "Liver", "Skin", "Brain"],
+answer: "Skin"
+},
+{
+question: "Which device is used to measure temperature?",
+options: ["Barometer", "Thermometer", "Hygrometer", "Altimeter"],
+answer: "Thermometer"
+},
+{
+question: "Which of the following is a prime number?",
+options: ["21", "33", "37", "49"],
+answer: "37"
+}
+];
+
+let currentQuestion = 0;
+let userAnswers = Array(questions.length).fill("");
+let examDuration = 5 * 60;
+let timerInterval;
+
+function loadQuestion() {
+    const quizDiv = document.getElementById("quiz");
+    let q = questions[currentQuestion];
+    let html = "<p><b>Q" + (currentQuestion + 1) + ": " + q.question + "</b></p>";
+    for(let i = 0; i < q.options.length; i++) {
+        let checked = userAnswers[currentQuestion] === q.options[i] ? "checked" : "";
+        html += `<input type="radio" name="option" value="${q.options[i]}" ${checked}> ${q.options[i]}<br>`;
+    }
+    quizDiv.innerHTML = html;
+    document.getElementById("prevBtn").disabled = currentQuestion === 0;
+}
+
+function nextQuestion() {
+    saveAnswer();
+    if(currentQuestion < questions.length -1) {
+        currentQuestion++;
+        loadQuestion();
+    } else {
+        alert("Question is over, You can submit");
+    }
+}
+
+function prevQuestion() {
+    saveAnswer();
+    if(currentQuestion > 0) {
+        currentQuestion--;
+        loadQuestion();
+    }
+}
+
+function saveAnswer() {
+    const options = document.getElementsByName("option");
+    for(let opt of options) {
+        if(opt.checked) {
+            userAnswers[currentQuestion] = opt.value;
+            break;
+        }
+    }
+}
+
+function submitExam() {
+    saveAnswer();
+    clearInterval(timerInterval);
+    let score = 0;
+    for(let i = 0; i < questions.length; i++) {
+        if(userAnswers[i] === questions[i].answer) score++;
+    }
+    document.getElementById("quiz").innerHTML = "";
+    document.getElementById("prevBtn").style.display = "none";
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("submitBtn").style.display = "none";
+    document.getElementById("timer").style.display = "none";
+    document.getElementById("result").innerHTML = "<b>Your score: " + score + " / " + questions.length + "</b>";
+}
+
+function startTimer() {
+    const timerDisplay = document.getElementById("timer");
+    timerInterval = setInterval(() => {
+        let minutes = Math.floor(examDuration / 60);
+        let seconds = examDuration % 60;
+        timerDisplay.textContent = `Time Left: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        examDuration--;
+        if (examDuration < 0) {
+            clearInterval(timerInterval);
+            alert("Time's up! Submitting your exam...");
+            submitExam();
+        }
+    }, 1000);
+}
+
+loadQuestion();
+startTimer();
+</script>
+</body>
+</html>
+
+
+  
+
