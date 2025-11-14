@@ -1,0 +1,19 @@
+<html>
+<body>
+<center>
+<h2 id="text">Hover over the image to see the magic:</h2>
+<img id="img"src="/home/ksb/Niya/images.jpegnature"alt="img"width="200"height="300"
+onmouseover="change1()"onmouseout="change2()">
+<script>
+function change1(){
+document.getElementById("text").innerHTML = "You hovered over the image!";
+document.getElementById("img").src = "/home/ksb/Niya/images.jpeg";
+}
+function change2(){
+document.getElementById("text").innerHTML = "Hover over the image to see the magic!";
+document.getElementById("img").src = "/home/ksb/Niya/Untitled.jpegelephant";
+}
+</script>
+</body>
+</html>
+
